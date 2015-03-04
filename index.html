@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FabMo Example App</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <script src="js/jquery.js"></script>
+    <div class="container">
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="active"><a href="#help" role="tab" data-toggle="tab">Home</a></li>
+        <li><a href="#control" role="tab" data-toggle="tab">Control</a></li>
+        <li><a href="#jobs" role="tab" data-toggle="tab">Jobs</a></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- Welcome/help pane -->
+        <div class="tab-pane active" id="help">
+            <h2>Welcome!</h2>
+            <p>This is the example app for the Fabmo platform.  Fabmo is an intelligent fabrication platform that brings the concept of apps to the world of computed aided manufacturing.  Fabmo apps (like this one) run right in the browser, but have access to CNC hardware to make tools work for developers.</p>
+            <p>If you're running this app on a tool, it provides a nice demo of tool functionality, but be careful, because these functions will actually drive the tool.  If you're running this example by simply viewing it in a browser outside the fabmo dashboard, the <strong>dashboard.js</strong> module runs in <em>simulation mode</em> using javascript alerts to mock up the behavior of the dashboard without actually being connected to a tool.  In this way, you can develop your apps with nothing but a web browser and a text editor, without being too concerned about communication with an actual tool until it's time to test.</p>
+            <h3>To get started, click one of the tabs above!</h3>
+        </div>
+
+        <!-- Navigation pane -->
+        <div class="tab-pane" id="control">
+            <h2>Controlling the Tool</h2>
+
+            <p>Direct control of the CNC tool is a part of many apps.  For simple operations, G-Code can be executed <em>immediately</em> on the tool using the <code>runGCode</code> function.</p>
+
+            <p>
+              <form class="form-inline" id="form-nav">
+                <div class="form-group has-success">
+                  <div class="input-group">
+                      <span class="input-group-addon">X</span>
+                      <input type="text" class="form-control num-input" id="nav-xinput" value="0.000">
+                  </div>
+                </div>
+                <div class="form-group has-success">
+                  <div class="input-group">
+                      <span class="input-group-addon">Y</span>
+                      <input type="text" class="form-control num-input" id="nav-yinput" value="0.000">
+                  </div>
+                </div>
+                <div class="form-group has-success">
+                  <div class="input-group">
+                      <span class="input-group-addon">Z</span>
+                      <input type="text" class="form-control num-input" id="nav-zinput" value="0.000">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <button id="nav-go" class="btn btn-default">Move Tool</button>
+                </div>
+              </form>
+              </p>
+              <p>If you're going to manipulate the tool directly, you may wish to display the Digital ReadOut, or DRO.  Although you can implement your own DRO using HTML/Javascript, it's probably better to use the dashboard's built-in DRO.  To control display of the DRO, you use the <code>showDRO</code> and <code>hideDRO</code> functions.</p>
+
+              <button id="nav-showdro" class="btn btn-primary">Show the DRO</button>
+              <button id="nav-hidedro" class="btn btn-primary">Hide the DRO</button>
+
+              <script type="text/javascript">
+                  /*
+                   * NAVIGATION EXAMPLE
+                   * 
+                   * Very simple navigation script.  When the user clicks the button, the tool is
+                   * moved to the specified position.  (Provided that position is valid)
+                   * 
+                   * Functions are also provided to show and hide the DRO
+                   *
+                   */
+
+                   // Validate the input of the provided form (just checks for a valid number, no range check)
+                   // Mark the input as invalid if it contains bad data
+                   // Return the value if it's valid, null otherwise
+                  function validateInput(target) {
+                      var f = parseFloat(target.val());
+                      if(isNaN(f) || f === undefined) {
+                          target.parent().removeClass('has-success');
+                          target.parent().addClass('has-error');
+                          return null;
+                      } else {
+                          target.parent().removeClass('has-error');
+                          target.parent().addClass('has-success');
+                          return f;
+                      }
+                  }
+
+                  // When the go button is pressed, validate the inputs and move the tool (if valid)
+                  $("#nav-go").click(function(evt) {
+                      var x = validateInput($("#nav-xinput"));
+                      var y = validateInput($("#nav-yinput"));
+                      var z = validateInput($("#nav-zinput"));
+                      if((x !== null) && (y !== null) && (z !== null)) {
+                          var gcode = "G0 X" + x + " Y" + y + " Z" + z;
+                          fabmoDashboard.runGCode(gcode);
+                      } else {
+                          alert("Position specified is invalid: " + x + "," + y + "," + z);
+                      }
+                      evt.preventDefault();
+                  });
+
+                  // Show and hide the DRO
+                  $("#nav-showdro").click(function(evt) {
+                      fabmoDashboard.showDRO();
+                  });
+                  $("#nav-hidedro").click(function(evt) {
+                      fabmoDashboard.hideDRO();
+                  });
+              </script>
+        </div>
+        
+        <div class="tab-pane" id="jobs">
+          <h2>Jobs</h2>
+          <p>Most of the time, rather than manipulating the tool directly, you will be interacting with it via the <strong>job manager.</strong>  The job manager is like a "print queue" for the tool, managing work in the form of CAM data for the tool to run.  The workflow of most apps will be to accept the user's input, use it to fill in some sort of parametric design, and post the G-Code resulting from the design process to the tool as a job.</p>
+          <p>If you're running this example in the dashboard, submitting a job will take you immediately to the job manager app, which shows your recently submitted job and gives you the option to run it.  If you're viewing this app standalone in a browser, the dashboard library simulates the job submission by simply downloading the G-Code file.</p>
+          <h3>Circle Cutter</h3>
+          <p> The form below is a very simple parametric design:  Given a few simple inputs, it cuts a circle.  When the <strong>Cut Circle</strong> button is clicked, The G-code for the circle is generated with javascript, and submitted to the tool as a job using the submitJob function.</p>
+
+          <!-- Responsive form for inputting circle parameters -->
+          <div class="row">
+            <div class="col-sm-5 col-sm-push-7" style="margin-left: auto; margin-right: auto; text-align: center; ">
+              <img src="img/circle.png"></img>
+            </div>
+            <div class="col-sm-7 col-sm-pull-5">
+              <form class="form-horizontal" id="form-jobs">
+                <div class="form-group">
+                  <label for="job-input-cx" class="col-sm-3 control-label">Center X (Cx)</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-cx" value="5">
+                      <span class="input-group-addon">in</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="job-input-cy" class="col-sm-3 control-label">Center Y (Cy)</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-cy" value="5">
+                      <span class="input-group-addon">in</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="job-input-d" class="col-sm-3 control-label">Diameter (d)</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-d" value="3">
+                      <span class="input-group-addon">in</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="job-input-depth" class="col-sm-3 control-label">Cut Depth</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-depth" value="0.25">
+                      <span class="input-group-addon">in</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="job-input-zpullup" class="col-sm-3 control-label">Z-Pullup</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-zpullup" value="1.0">
+                      <span class="input-group-addon">in</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="job-input-segsize" class="col-sm-3 control-label">Segment Size</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-segsize" value="10">
+                      <span class="input-group-addon">mils</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="job-input-feedrate" class="col-sm-3 control-label">Feedrate</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-feedrate" value="3.0">
+                      <span class="input-group-addon">in/sec</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="col-sm-12 has-success" style="text-align: right;">
+                    <a class="btn btn-success btn-lg" id="job-go">Cut Circle</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div> <!-- row -->
+          <script type="text/javascript">
+                  /*
+                   * JOB SUBMISSION EXAMPLE
+                   * 
+                   * Very simple job submission.  Uses form inputs to generate a segmented circle in G-Code and
+                   * submits that G-Code to the tool as a job.
+                   *
+                   */
+                  function makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate) {
+                    function f(x) {return x.toFixed(5)}
+                    var r = d/2.0;
+                    var seg_size = seg_size/1000.0;
+                    var feedrate = feedrate*60.0;
+                    var circ = Math.PI*d;
+                    var segments = circ/seg_size;
+                    var dtheta = 2*Math.PI/segments;
+                    var gcodes = ['(Simple Circle)', 
+                                  '(Center: ' + f(cx) + ',' + f(cy) + ' Diameter: ' + f(d) + ')',
+                                  'G0 Z' + zpullup,
+                                  'G0 X' + f(cx + r) + ' Y' + f(cy),
+                                  'M4 (Spindle on)',
+                                  'G4 P3.0 (Wait for spindle)',
+                                  'G1 Z-' + f(depth) + ' F' + f(feedrate) + '(Plunge)', 
+                                  '(Cut Circle)'];
+                    var theta = 0.0
+                    while(theta < (2*Math.PI)) {
+                      var x = cx + Math.cos(theta)*r;
+                      var y = cy + Math.sin(theta)*r;
+                      gcodes.push('G1 X' + f(x) + ' Y' + f(y) + ' F' + feedrate);
+                      theta += dtheta;
+                    }
+                    gcodes.push('G1 X' + f(cx + r) + ' Y' + f(cy) + ' F' + feedrate);
+                    gcodes.push('G0 Z' + f(zpullup) + ' (Pull out of material)');
+                    gcodes.push('M8 (Spindle off)');
+                    gcodes.push('G0 X0 Y0 (Jog home)');
+                    return gcodes.join('\n');
+                  }
+                  // When the submit button is pressed, validate the inputs and submit the job. (if valid)
+                  $("#job-go").click(function(evt) {
+                      var cx = validateInput($("#job-input-cx"));
+                      var cy = validateInput($("#job-input-cy"));
+                      var d = validateInput($("#job-input-d"));
+                      var zpullup = validateInput($("#job-input-zpullup"));
+                      var depth = validateInput($("#job-input-depth"));
+                      var seg_size = validateInput($("#job-input-segsize"));
+                      var feedrate = validateInput($("#job-input-feedrate"));
+                      code = makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate);
+                      fabmoDashboard.submitJob(code, {filename : 'example-circle.nc'})
+                      evt.preventDefault();
+                  });
+          </script>
+        </div> <!-- tab pane -->
+      </div> <!-- tab content -->
+    </div><!-- container -->
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script type="text/javascript">
+        // Prevent a stray enter key from inadvertently submitting a form (and setting the tool in motion!)
+        $(document).ready(function() {
+          $(window).keydown(function(event){
+            if(event.keyCode == 13) {
+              event.preventDefault();
+              return false;
+            }
+          });
+
+          // Trigger a validation every time an input value changes
+          $(".num-input").change(function(evt) {
+              validateInput($(evt.target));
+          });
+        });
+    </script>
+  </body>
+</html>
