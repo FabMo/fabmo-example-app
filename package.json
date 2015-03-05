@@ -1,0 +1,10 @@
+{
+	"name":"Example App",
+	"main":"./index.html",
+	"icon":"icon.png",
+	"icon_color":"navy",
+	"version":"0.0.1",
+	"author":"Ryan Sturmer",
+	"website":"http://www.shopbottools.com",
+	"description":"Demo app from the Fabmo developer kit"
+}
