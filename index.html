@@ -120,7 +120,7 @@
           <h2>Jobs</h2>
           <p>Most of the time, rather than manipulating the tool directly, you will be interacting with it via the <strong>job manager.</strong>  The job manager is like a "print queue" for the tool, managing work in the form of CAM data for the tool to run.  The workflow of most apps will be to accept the user's input, use it to fill in some sort of parametric design, and post the G-Code resulting from the design process to the tool as a job.</p>
           <p>If you're running this example in the dashboard, submitting a job will take you immediately to the job manager app, which shows your recently submitted job and gives you the option to run it.  If you're viewing this app standalone in a browser, the dashboard library simulates the job submission by simply downloading the G-Code file.</p>
-          <h3>Circle Cutter</h3>
+          <h3>Hole Cutter</h3>
           <p> The form below is a very simple parametric design:  Given a few simple inputs, it cuts a circle.  When the <strong>Cut Circle</strong> button is clicked, The G-code for the circle is generated with javascript, and submitted to the tool as a job using the submitJob function.</p>
 
           <!-- Responsive form for inputting circle parameters -->
@@ -193,6 +193,15 @@
                     </div>
                   </div>
                 </div>
+                                <div class="form-group">
+                  <label for="job-input-feedrate" class="col-sm-3 control-label">Pass Depth</label>
+                  <div class="col-sm-9">
+                    <div class="input-group has-success">
+                      <input class="form-control num-input" id="job-input-passdepth" value="0.125">
+                      <span class="input-group-addon">in</span>
+                    </div>
+                  </div>
+                </div>
                 <div class="form-group">
                   <div class="col-sm-12 has-success" style="text-align: right;">
                     <a class="btn btn-success btn-lg" id="job-go">Cut Circle</a>
@@ -209,7 +218,7 @@
                    * submits that G-Code to the tool as a job.
                    *
                    */
-                  function makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate) {
+                  function makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate, pass_depth) {
                     function f(x) {return x.toFixed(5)}
                     var r = d/2.0;
                     var seg_size = seg_size/1000.0;
@@ -221,21 +230,32 @@
                                   '(Center: ' + f(cx) + ',' + f(cy) + ' Diameter: ' + f(d) + ')',
                                   'G0 Z' + zpullup,
                                   'G0 X' + f(cx + r) + ' Y' + f(cy),
-                                  'M4 (Spindle on)',
-                                  'G4 P3.0 (Wait for spindle)',
-                                  'G1 Z-' + f(depth) + ' F' + f(feedrate) + '(Plunge)', 
+                                  'M4',
+                                  'G4 P3.0',
                                   '(Cut Circle)'];
-                    var theta = 0.0
-                    while(theta < (2*Math.PI)) {
-                      var x = cx + Math.cos(theta)*r;
-                      var y = cy + Math.sin(theta)*r;
-                      gcodes.push('G1 X' + f(x) + ' Y' + f(y) + ' F' + feedrate);
-                      theta += dtheta;
+                    plunge = 0;
+                    pass = 0;
+                    while(plunge < depth) {
+                      plunge += 0.125;
+                      pass += 1;
+                      if(plunge > depth) { plunge = depth;}
+                      gcodes.push('(Pass ' + pass + ')');
+                      gcodes.push('G1 Z-' + f(plunge) + ' F' + f(feedrate))
+                      var theta = 0.0
+                      while(theta < (2*Math.PI)) {
+                        var x = cx + Math.cos(theta)*r;
+                        var y = cy + Math.sin(theta)*r;
+                        gcodes.push('G1 X' + f(x) + ' Y' + f(y) + ' F' + feedrate);
+                        theta += dtheta;
+                      }
+                      gcodes.push('G1 X' + f(cx + r) + ' Y' + f(cy) + ' F' + feedrate);
                     }
-                    gcodes.push('G1 X' + f(cx + r) + ' Y' + f(cy) + ' F' + feedrate);
-                    gcodes.push('G0 Z' + f(zpullup) + ' (Pull out of material)');
-                    gcodes.push('M8 (Spindle off)');
-                    gcodes.push('G0 X0 Y0 (Jog home)');
+                      gcodes.push('G0 Z' + f(zpullup));
+                      gcodes.push('(Spindle Off)')
+                      gcodes.push('M8');
+                      gcodes.push('(Jog Home)')
+                      gcodes.push('G0 X0 Y0');
+
                     return gcodes.join('\n');
                   }
                   // When the submit button is pressed, validate the inputs and submit the job. (if valid)
@@ -247,8 +267,13 @@
                       var depth = validateInput($("#job-input-depth"));
                       var seg_size = validateInput($("#job-input-segsize"));
                       var feedrate = validateInput($("#job-input-feedrate"));
-                      code = makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate);
-                      fabmoDashboard.submitJob(code, {filename : 'example-circle.nc'})
+                      var passdepth = validateInput($("#job-input-passdepth"));
+
+                      code = makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate, passdepth);
+                      fabmoDashboard.submitJob(code, {filename : 'example-circle.nc',
+                                                      name : d + '" Diameter Circle',
+                                                      description : d + '" diameter circle centered at ' + cx + ',' + cy + ' at a depth of ' + depth + '"' 
+                      })
                       evt.preventDefault();
                   });
           </script>
