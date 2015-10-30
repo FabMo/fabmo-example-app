@@ -59,60 +59,12 @@
                 </div>
               </form>
               </p>
+              <h2>Displaying the DRO</h2>
               <p>If you're going to manipulate the tool directly, you may wish to display the Digital ReadOut, or DRO.  Although you can implement your own DRO using HTML/Javascript, it's probably better to use the dashboard's built-in DRO.  To control display of the DRO, you use the <code>showDRO</code> and <code>hideDRO</code> functions.</p>
 
               <button id="nav-showdro" class="btn btn-primary">Show the DRO</button>
               <button id="nav-hidedro" class="btn btn-primary">Hide the DRO</button>
-
-              <script type="text/javascript">
-                  /*
-                   * NAVIGATION EXAMPLE
-                   * 
-                   * Very simple navigation script.  When the user clicks the button, the tool is
-                   * moved to the specified position.  (Provided that position is valid)
-                   * 
-                   * Functions are also provided to show and hide the DRO
-                   *
-                   */
-
-                   // Validate the input of the provided form (just checks for a valid number, no range check)
-                   // Mark the input as invalid if it contains bad data
-                   // Return the value if it's valid, null otherwise
-                  function validateInput(target) {
-                      var f = parseFloat(target.val());
-                      if(isNaN(f) || f === undefined) {
-                          target.parent().removeClass('has-success');
-                          target.parent().addClass('has-error');
-                          return null;
-                      } else {
-                          target.parent().removeClass('has-error');
-                          target.parent().addClass('has-success');
-                          return f;
-                      }
-                  }
-
-                  // When the go button is pressed, validate the inputs and move the tool (if valid)
-                  $("#nav-go").click(function(evt) {
-                      var x = validateInput($("#nav-xinput"));
-                      var y = validateInput($("#nav-yinput"));
-                      var z = validateInput($("#nav-zinput"));
-                      if((x !== null) && (y !== null) && (z !== null)) {
-                          var gcode = "G0 X" + x + " Y" + y + " Z" + z;
-                          fabmoDashboard.runGCode(gcode);
-                      } else {
-                          alert("Position specified is invalid: " + x + "," + y + "," + z);
-                      }
-                      evt.preventDefault();
-                  });
-
-                  // Show and hide the DRO
-                  $("#nav-showdro").click(function(evt) {
-                      fabmoDashboard.showDRO();
-                  });
-                  $("#nav-hidedro").click(function(evt) {
-                      fabmoDashboard.hideDRO();
-                  });
-              </script>
+              <script src="js/control.js"></script>
         </div>
         
         <!-- Jobs Pane -->
@@ -210,76 +162,12 @@
               </form>
             </div>
           </div> <!-- row -->
-          <script type="text/javascript">
-                  /*
-                   * JOB SUBMISSION EXAMPLE
-                   * 
-                   * Very simple job submission.  Uses form inputs to generate a segmented circle in G-Code and
-                   * submits that G-Code to the tool as a job.
-                   *
-                   */
-                  function makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate, pass_depth) {
-                    function f(x) {return x.toFixed(5)}
-                    var r = d/2.0;
-                    var seg_size = seg_size/1000.0;
-                    var feedrate = feedrate*60.0;
-                    var circ = Math.PI*d;
-                    var segments = circ/seg_size;
-                    var dtheta = 2*Math.PI/segments;
-                    var gcodes = ['(Simple Circle)', 
-                                  '(Center: ' + f(cx) + ',' + f(cy) + ' Diameter: ' + f(d) + ')',
-                                  'G0 Z' + zpullup,
-                                  'G0 X' + f(cx + r) + ' Y' + f(cy),
-                                  'M4',
-                                  'G4 P3.0',
-                                  '(Cut Circle)'];
-                    plunge = 0;
-                    pass = 0;
-                    while(plunge < depth) {
-                      plunge += 0.125;
-                      pass += 1;
-                      if(plunge > depth) { plunge = depth;}
-                      gcodes.push('(Pass ' + pass + ')');
-                      gcodes.push('G1 Z-' + f(plunge) + ' F' + f(feedrate))
-                      var theta = 0.0
-                      while(theta < (2*Math.PI)) {
-                        var x = cx + Math.cos(theta)*r;
-                        var y = cy + Math.sin(theta)*r;
-                        gcodes.push('G1 X' + f(x) + ' Y' + f(y) + ' F' + feedrate);
-                        theta += dtheta;
-                      }
-                      gcodes.push('G1 X' + f(cx + r) + ' Y' + f(cy) + ' F' + feedrate);
-                    }
-                      gcodes.push('G0 Z' + f(zpullup));
-                      gcodes.push('(Spindle Off)')
-                      gcodes.push('M8');
-                      gcodes.push('(Jog Home)')
-                      gcodes.push('G0 X0 Y0');
-
-                    return gcodes.join('\n');
-                  }
-                  // When the submit button is pressed, validate the inputs and submit the job. (if valid)
-                  $("#job-go").click(function(evt) {
-                      var cx = validateInput($("#job-input-cx"));
-                      var cy = validateInput($("#job-input-cy"));
-                      var d = validateInput($("#job-input-d"));
-                      var zpullup = validateInput($("#job-input-zpullup"));
-                      var depth = validateInput($("#job-input-depth"));
-                      var seg_size = validateInput($("#job-input-segsize"));
-                      var feedrate = validateInput($("#job-input-feedrate"));
-                      var passdepth = validateInput($("#job-input-passdepth"));
-
-                      code = makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate, passdepth);
-                      fabmoDashboard.submitJob(code, {filename : 'example-circle.nc',
-                                                      name : d + '" Diameter Circle',
-                                                      description : d + '" diameter circle centered at ' + cx + ',' + cy + ' at a depth of ' + depth + '"' 
-                      })
-                      evt.preventDefault();
-                  });
-          </script>
+          <script src="js/job.js"></script>
         </div> <!-- tab pane -->
       </div> <!-- tab content -->
     </div><!-- container -->
+
+
     <script src="js/bootstrap.min.js"></script>
     <script src="js/dashboard.js"></script>
     <script type="text/javascript">
@@ -290,11 +178,6 @@
               event.preventDefault();
               return false;
             }
-          });
-
-          // Trigger a validation every time an input value changes
-          $(".num-input").change(function(evt) {
-              validateInput($(evt.target));
           });
         });
     </script>
