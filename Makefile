@@ -1,5 +1,5 @@
-example.fma: clean *.html js/*.js css/*.css icon.png package.json
-	zip example.fma *.html js/*.js css/*.css icon.png package.json
+example.fma: clean *.html js/*.js js/lib/*.js css/*.css img/*.png icon.png package.json
+	zip example.fma *.html js/*.js js/lib/*.js css/*.css img/*.png icon.png package.json
 
 .PHONY: clean
 

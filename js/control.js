@@ -26,9 +26,9 @@ function validateInput(target) {
 
 // When the go button is pressed, validate the inputs and move the tool (if valid)
 $("#nav-go").click(function(evt) {
-  var x = validateInput($("#nav-xinput"));
-  var y = validateInput($("#nav-yinput"));
-  var z = validateInput($("#nav-zinput"));
+  var x = validateInput($("#ctrl-xinput"));
+  var y = validateInput($("#ctrl-yinput"));
+  var z = validateInput($("#ctrl-zinput"));
   if((x !== null) && (y !== null) && (z !== null)) {
       var gcode = "G0 X" + x + " Y" + y + " Z" + z;
       fabmoDashboard.runGCode(gcode);
@@ -38,15 +38,16 @@ $("#nav-go").click(function(evt) {
   evt.preventDefault();
 });
 
-// Show and hide the DRO
-$("#nav-showdro").click(function(evt) {
-  fabmoDashboard.showDRO();
-});
-$("#nav-hidedro").click(function(evt) {
-  fabmoDashboard.hideDRO();
-});
-
 // Trigger a validation every time an input value changes
 $(".num-input").change(function(evt) {
     validateInput($(evt.target));
 });
+
+// Update the position display every time a status report is recieved
+fabmoDashboard.on('status', function(status) {
+  $('#ctrl-xdisplay').val(status.posx);
+  $('#ctrl-ydisplay').val(status.posy);
+  $('#ctrl-zdisplay').val(status.posz);
+});
+
+fabmoDashboard.requestStatus();

@@ -9,49 +9,60 @@
     <link href="css/style.css" rel="stylesheet">
   </head>
   <body>
-    <script src="js/jquery.js"></script>
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/dashboard.js"></script>
+
     <div class="container">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#help" role="tab" data-toggle="tab">Home</a></li>
-        <li><a href="#control" role="tab" data-toggle="tab">Control</a></li>
-        <li><a href="#jobs" role="tab" data-toggle="tab">Jobs</a></li>
+        <li class="active"><a href="#tab-help" role="tab" data-toggle="tab">Home</a></li>
+        <li><a href="#tab-control" role="tab" data-toggle="tab">Control</a></li>
+        <li><a href="#tab-dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
+        <li><a href="#tab-jobs" role="tab" data-toggle="tab">Jobs</a></li>
+        <li><a href="#tab-config" role="tab" data-toggle="tab">Configuration</a></li>
       </ul>
 
       <div class="tab-content">
-
         <!-- Welcome/help pane -->
-        <div class="tab-pane active" id="help">
+        <div class="tab-pane active" id="tab-help">
             <h2>Welcome!</h2>
             <p>This is the example app for the Fabmo platform.  Fabmo is an intelligent fabrication platform that brings the concept of apps to the world of computed aided manufacturing.  Fabmo apps (like this one) run right in the browser, but have access to CNC hardware to make tools work for developers.</p>
             <p>If you're running this app on a tool, it provides a nice demo of tool functionality, but be careful, because these functions will actually drive the tool.  If you're running this example by simply viewing it in a browser outside the fabmo dashboard, the <strong>dashboard.js</strong> module runs in <em>simulation mode</em> using javascript alerts to mock up the behavior of the dashboard without actually being connected to a tool.  In this way, you can develop your apps with nothing but a web browser and a text editor, without being too concerned about communication with an actual tool until it's time to test.</p>
-            <h3>To get started, click one of the tabs above!</h3>
+            
+            <h3>Organization</h3>
+            <p>This app is organized to be easy to read and to edit.  The <strong>js</strong> directory contains a collection of individual javascript files, each of which corresponds to a tab in this view.  If you are interested in the example on a particular tab, examine its HTML code in <strong>index.html</strong> and corresponding javascript functions in the <strong>.js</strong> file that corresponds to the tab name.</p>
+
+            <h3>Conventions</h3>
+            <p>In the documentation for these examples, file and directory names are shown in <strong>this style</strong> while function and variable names <code>look like this</code></p>
         </div>
 
         <!-- Control Pane -->
-        <div class="tab-pane" id="control">
-            <h2>Controlling the Tool</h2>
+        <div class="tab-pane" id="tab-control">
+            <h2>Control/Feedback</h2>
 
-            <p>Direct control of the CNC tool is a part of many apps.  For simple operations, G-Code can be executed <em>immediately</em> on the tool using the <code>runGCode</code> function.</p>
 
-            <p>
+            <h3>Manually Controlling the Tool</h3>
+            <p>For simple operations, G-Code can be executed <em>immediately</em> on the tool using the <code>runGCode</code> function.  The example below collects a position from the user, and moves to the tool to that position when requested using the runGCode function.</p>
+
+              <p>
               <form class="form-inline" id="form-nav">
                 <div class="form-group has-success">
                   <div class="input-group">
                       <span class="input-group-addon">X</span>
-                      <input type="text" class="form-control num-input" id="nav-xinput" value="0.000">
+                      <input type="text" class="form-control num-input" id="ctrl-xinput" value="0.000">
                   </div>
                 </div>
                 <div class="form-group has-success">
                   <div class="input-group">
                       <span class="input-group-addon">Y</span>
-                      <input type="text" class="form-control num-input" id="nav-yinput" value="0.000">
+                      <input type="text" class="form-control num-input" id="ctrl-yinput" value="0.000">
                   </div>
                 </div>
                 <div class="form-group has-success">
                   <div class="input-group">
                       <span class="input-group-addon">Z</span>
-                      <input type="text" class="form-control num-input" id="nav-zinput" value="0.000">
+                      <input type="text" class="form-control num-input" id="ctrl-zinput" value="0.000">
                   </div>
                 </div>
                 <div class="form-group">
@@ -59,16 +70,62 @@
                 </div>
               </form>
               </p>
-              <h2>Displaying the DRO</h2>
-              <p>If you're going to manipulate the tool directly, you may wish to display the Digital ReadOut, or DRO.  Although you can implement your own DRO using HTML/Javascript, it's probably better to use the dashboard's built-in DRO.  To control display of the DRO, you use the <code>showDRO</code> and <code>hideDRO</code> functions.</p>
 
-              <button id="nav-showdro" class="btn btn-primary">Show the DRO</button>
-              <button id="nav-hidedro" class="btn btn-primary">Hide the DRO</button>
+              <h3>Getting Tool Feedback</h3>
+              <p>Fabmo provides status reports when the system status changes, or on request.  Apps can subscribe to these notifications, and convey information about what's happening with the tool.  If you are running this app on an actual Fabmo system, you can drive the tool around manually, and observe these numbers changing.</p>
+              <p>
+              <form class="form-inline" id="form-nav">
+                <div class="form-group">
+                  <div class="input-group">
+                      <span class="input-group-addon">X</span>
+                      <input type="text" class="form-control num-input" id="ctrl-xdisplay" value="????" readonly>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group">
+                      <span class="input-group-addon">Y</span>
+                      <input type="text" class="form-control num-input" id="ctrl-ydisplay" value="????" readonly>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-group">
+                      <span class="input-group-addon">Z</span>
+                      <input type="text" class="form-control num-input" id="ctrl-zdisplay" value="????" readonly>
+                  </div>
+                </div>
+              </form>
+              </p>
+              <p><em>In the example above, the tool position will only be filled in once a status report is recieved from the tool.  If you are running the app in <strong>simulation mode</strong> (outside the dashboard) these numbers will never be filled in.</em></p>
               <script src="js/control.js"></script>
+
         </div>
         
+         <div class="tab-pane" id="tab-dashboard">
+            <h2>Interacting with the Dashboard</h2>
+
+            <p>The dashboard is the in-browser portion of the FabMo framework.  Using <strong>dashboard.js</strong> you can interact with the dashboard as well as the tool directly.</p>
+
+            <h3>Displaying the DRO</h3>
+              <p>If you're going to manipulate the tool directly, you may wish to display the Digital ReadOut, or DRO.  Although you can implement your own DRO using HTML/Javascript, it's probably better to use the dashboard's built-in DRO.  To control display of the DRO, you use the <code>showDRO</code> and <code>hideDRO</code> functions.</p>
+              <button id="nav-showdro" class="btn btn-primary">Show the DRO</button>
+              <button id="nav-hidedro" class="btn btn-primary">Hide the DRO</button>
+
+            <h3>Notifying the User</h3>
+              <p>The dashboard has a built in notification system, which you can access using the <code>notify</code> function.  Notifications can have several types including <span class="label label-info">info</span> <span class="label label-success">success</span> <span class="label label-warning">warning</span> and <span class="label label-danger">error</span></p>
+              <button id="dash-info" class="btn btn-info">Info Notify</button>
+              <button id="dash-success" class="btn btn-success">Success Notify</button>
+              <button id="dash-warning" class="btn btn-warning">Warning Notify</button>
+              <button id="dash-error" class="btn btn-danger">Error Notify</button>
+
+            <h3>Switching Apps</h3>
+              <p>Sometimes it's appropriate for an app to hand control over to another app.  A common example of this is jumping from the current app to the previewer, or editor, or job manager.  Each app has an id, and apps can be launched by calling <code>launchApp</code> with the appropriate id.  Only one app runs at a time, so be careful with the <code>launchApp</code> function.  When you call it, you are <em>exiting</em> your app to launch another one!</p>
+              <button id="dash-launch-job-manager" class="btn btn-primary">Launch the Job Manger</button>              
+            
+            <script src="js/dashboard.js"></script>
+        </div>
+
         <!-- Jobs Pane -->
-        <div class="tab-pane" id="jobs">
+        <div class="tab-pane" id="tab-jobs">
           <h2>Jobs</h2>
           <p>Most of the time, rather than manipulating the tool directly, you will be interacting with it via the <strong>job manager.</strong>  The job manager is like a "print queue" for the tool, managing work in the form of CAM data for the tool to run.  The workflow of most apps will be to accept the user's input, use it to fill in some sort of parametric design, and post the G-Code resulting from the design process to the tool as a job.</p>
           <p>If you're running this example in the dashboard, submitting a job will take you immediately to the job manager app, which shows your recently submitted job and gives you the option to run it.  If you're viewing this app standalone in a browser, the dashboard library simulates the job submission by simply downloading the G-Code file.</p>
@@ -164,12 +221,21 @@
           </div> <!-- row -->
           <script src="js/job.js"></script>
         </div> <!-- tab pane -->
+
+        <div class="tab-pane" id="tab-config">
+            <h2>Configuration</h2>
+            <p>Fabmo supports several levels of configuration, and apps have access to the system-wide, their own app-specific configuration, as well as configuration that lives locally in the browser.</p>
+            
+            <h3>System Configuration</h3>
+            <p>Each fabmo tool has a system-wide configuration tree, which can be retrieved using the <code>getConfig</code> function.  The system-wide configuration is editable, and changes are persistent.  The configuration of this system is shown below:</p>
+            <div class="well" id="config-system-config">
+              <em>On a live Fabmo system, system configuration information would appear here.</em>
+            </div>
+            <script src="js/config.js"></script>
+        </div>
       </div> <!-- tab content -->
     </div><!-- container -->
 
-
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/dashboard.js"></script>
     <script type="text/javascript">
         // Prevent a stray enter key from inadvertently submitting a form (and setting the tool in motion!)
         $(document).ready(function() {
