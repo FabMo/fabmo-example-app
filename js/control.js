@@ -31,7 +31,7 @@ $("#nav-go").click(function(evt) {
   var z = validateInput($("#ctrl-zinput"));
   if((x !== null) && (y !== null) && (z !== null)) {
       var gcode = "G0 X" + x + " Y" + y + " Z" + z;
-      fabmoDashboard.runGCode(gcode);
+      fabmo.runGCode(gcode);
   } else {
       alert("Position specified is invalid: " + x + "," + y + "," + z);
   }
@@ -44,10 +44,10 @@ $(".num-input").change(function(evt) {
 });
 
 // Update the position display every time a status report is recieved
-fabmoDashboard.on('status', function(status) {
+fabmo.on('status', function(status) {
   $('#ctrl-xdisplay').val(status.posx);
   $('#ctrl-ydisplay').val(status.posy);
   $('#ctrl-zdisplay').val(status.posz);
 });
 
-fabmoDashboard.requestStatus();
+fabmo.requestStatus();

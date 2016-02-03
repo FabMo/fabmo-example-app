@@ -11,8 +11,10 @@
   <body>
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
-    <script src="js/lib/dashboard.js"></script>
-
+    <script src="js/lib/fabmo.js"></script>
+    <script type="text/javascript">
+        var fabmo = new FabMoDashboard();
+    </script>
     <div class="container">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
@@ -236,7 +238,7 @@
       </div> <!-- tab content -->
     </div><!-- container -->
 
-    <script type="text/javascript">
+    <script type="text/javascript">        
         // Prevent a stray enter key from inadvertently submitting a form (and setting the tool in motion!)
         $(document).ready(function() {
           $(window).keydown(function(event){
