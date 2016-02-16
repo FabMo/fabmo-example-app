@@ -405,8 +405,8 @@ FabMoDashboard.prototype.clearJobQueue = function(callback) {
 	this._call("clearJobQueue",null, callback);
 }
 
-FabMoDashboard.prototype.getJobHistory = function(callback) {
-	this._call("getJobHistory",null, callback);
+FabMoDashboard.prototype.getJobHistory = function(options, callback) {
+	this._call("getJobHistory",options, callback);
 }
 
 FabMoDashboard.prototype.runNext = function(callback) {
@@ -556,6 +556,14 @@ FabMoDashboard.prototype.deleteMacro = function(id, callback) {
 
 FabMoDashboard.prototype.getAppConfig = function(callback) {
 	this._call("getAppConfig", null, callback);
+}
+
+FabMoDashboard.prototype.getVersion = function(callback) {
+	this._call("getVersion", null, callback);
+}
+
+FabMoDashboard.prototype.navigate = function(url, options, callback) {
+	this._call("navigate", {'url' : url, 'options' : options}, callback);
 }
 
 FabMoDashboard.prototype.setAppConfig = function(config, callback) {

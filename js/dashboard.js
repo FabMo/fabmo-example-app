@@ -22,6 +22,6 @@ $("#dash-launch-job-manager").click(function(evt) {
 
 // ted's 2/15/16 test of displaying info ...
 });
-$("dash-showinfo3").click(function(evt) {
-  fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf');
+$("#dash-showinfo").click(function(evt) {
+  fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_blank'});
 });
