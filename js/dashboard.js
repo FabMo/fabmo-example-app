@@ -20,6 +20,9 @@ $("#dash-error").click(function(evt) {
 $("#dash-launch-job-manager").click(function(evt) {
   fabmo.launchApp('job-manager');
 });
-$("#dash-showinfo").click(function(evt) {
+$("#dash-showinfo-same").click(function(evt) {
+  fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_top'});
+});
+$("#dash-showinfo-new").click(function(evt) {
   fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_blank'});
 });
