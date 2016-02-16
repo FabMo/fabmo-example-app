@@ -19,8 +19,6 @@ $("#dash-error").click(function(evt) {
 });
 $("#dash-launch-job-manager").click(function(evt) {
   fabmo.launchApp('job-manager');
-
-// ted's 2/15/16 test of displaying info ...
 });
 $("#dash-showinfo").click(function(evt) {
   fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_blank'});
