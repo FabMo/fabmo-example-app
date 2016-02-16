@@ -105,7 +105,7 @@
          <div class="tab-pane" id="tab-dashboard">
             <h2>Interacting with the Dashboard</h2>
 
-            <p>The dashboard is the in-browser portion of the FabMo framework.  Using <strong>dashboard.js</strong> you can interact with the dashboard as well as the tool directly.</p>
+            <p>The dashboard is the in-browser portion of the FabMo framework.  Using <strong>fabmo.js</strong> you can interact with the dashboard as well as the tool directly.</p>
 
             <h3>Displaying the DRO</h3>
               <p>If you're going to manipulate the tool directly, you may wish to display the Digital ReadOut, or DRO.  Although you can implement your own DRO using HTML/Javascript, it's probably better to use the dashboard's built-in DRO.  To control display of the DRO, you use the <code>showDRO</code> and <code>hideDRO</code> functions.</p>
@@ -121,7 +121,13 @@
 
             <h3>Switching Apps</h3>
               <p>Sometimes it's appropriate for an app to hand control over to another app.  A common example of this is jumping from the current app to the previewer, or editor, or job manager.  Each app has an id, and apps can be launched by calling <code>launchApp</code> with the appropriate id.  Only one app runs at a time, so be careful with the <code>launchApp</code> function.  When you call it, you are <em>exiting</em> your app to launch another one!</p>
-              <button id="dash-launch-job-manager" class="btn btn-primary">Launch the Job Manger</button>              
+              <button id="dash-launch-job-manager" class="btn btn-primary">Launch the Job Manger</button>  
+
+            <h3>Displaying INFO</h3>
+              <p>URL-accessible information (e.g. pages, PDFs, etc.) can be displayed by with standard HTML/CSS calls or by using the <code>fabmo.navigate(URL)</code> function.</p>
+              <button class="btn btn-info"><a href="http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf">Click here for help (Inside App)</a></button>
+              <button class="btn btn-info"><a target="_blank" href="http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf">Click here for help (New Window)</a></button>
+              <button id="dash-showinfo3" class="btn btn-primary">Use Function</button>
             
             <script src="js/dashboard.js"></script>
         </div>
