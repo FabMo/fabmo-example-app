@@ -8,7 +8,7 @@
   "website": "http://www.shopbottools.com",
   "description": "Demo app for the Fabmo Developer Kit",
   "devDependencies": {
-    "grunt": "~0.4.5",
+    "grunt": "^0.4.5",
     "grunt-zip": "^0.17.1"
   }
 }
