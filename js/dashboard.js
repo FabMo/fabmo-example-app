@@ -26,3 +26,18 @@ $("#dash-showinfo-same").click(function(evt) {
 $("#dash-showinfo-new").click(function(evt) {
   fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_blank'});
 });
+
+fabmo.isOnline(function(err, online) {
+	if(err) {
+		$('#lbl-online').addClass('label-default').removeClass('label-danger label-success');
+		$('#lbl-online').text('Unknown');	
+		return;					
+	}
+	if(online) {
+		$('#lbl-online').addClass('label-success').removeClass('label-danger label-default');
+		$('#lbl-online').text('Online');				
+	} else {
+		$('#lbl-online').addClass('label-danger').removeClass('label-success label-default');
+		$('#lbl-online').text('Offline');
+	}
+});
