@@ -3,8 +3,8 @@
 	"main":"./index.html",
 	"icon":"icon.png",
 	"icon_color":"navy",
-	"version":"0.0.1",
+	"version":"0.0.2",
 	"author":"Ryan Sturmer",
 	"website":"http://www.shopbottools.com",
-	"description":"Demo app from the Fabmo developer kit"
+	"description":"Demo app for the Fabmo Developer Kit"
 }
