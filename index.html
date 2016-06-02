@@ -23,8 +23,6 @@
         <li><a href="#tab-dashboard" role="tab" data-toggle="tab">Dashboard</a></li>
         <li><a href="#tab-jobs" role="tab" data-toggle="tab">Jobs</a></li>
         <li><a href="#tab-config" role="tab" data-toggle="tab">Configuration</a></li>
-        <li><a href="#tab-misc" role="tab" data-toggle="tab">Misc</a></li>
-
       </ul>
 
       <div class="tab-content">
@@ -125,11 +123,16 @@
               <p>Sometimes it's appropriate for an app to hand control over to another app.  A common example of this is jumping from the current app to the previewer, or editor, or job manager.  Each app has an id, and apps can be launched by calling <code>launchApp</code> with the appropriate id.  Only one app runs at a time, so be careful with the <code>launchApp</code> function.  When you call it, you are <em>exiting</em> your app to launch another one!</p>
               <button id="dash-launch-job-manager" class="btn btn-primary">Launch the Job Manger</button>  
 
-            <h3>Displaying INFO</h3>
+            <h3>Displaying Information</h3>
               <p>URL-accessible information (e.g. pages, PDFs, etc.) can be displayed using the <code>fabmo.navigate(URL, {target})</code> function.</p>
               <button class="btn btn-info" id="dash-showinfo-same">Click here for help (Same Page)</button>
               <button class="btn btn-info" id="dash-showinfo-new">Click here for help (New Window)</button>
-            
+
+            <h3>Check Online Status</h3>
+              <p>You can check whether internet access is available using the <code>fabmo.isOnline()</code> function.</p>
+              <p>
+              Tool online status: <span class="label label-default" id="lbl-online">Unknown</span>            
+              </p>
             <script src="js/dashboard.js"></script>
         </div>
 
@@ -241,18 +244,6 @@
               <em>On a live Fabmo system, system configuration information would appear here.</em>
             </div>
             <script src="js/config.js"></script>
-        </div>
-
-        <div class="tab-pane" id="tab-misc">
-            <h2>Miscellaneous</h2>
-            <p>Here's a few things that don't fit anywhere else.</p>
-            
-            <h3>Navigating</h3>
-            <p>
-            <a id="open-document">Click here to open a document.</a>
-            If there's a network, you get the safety guide - if there's not, you get the network guide.
-            </p>
-            <script src="js/misc.js"></script>
         </div>
 
       </div> <!-- tab content -->
