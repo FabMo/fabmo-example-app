@@ -1,23 +1,28 @@
 
 $("#nav-showdro").click(function(evt) {
-  fabmoDashboard.showDRO();
+  fabmo.showDRO();
 });
 $("#nav-hidedro").click(function(evt) {
-  fabmoDashboard.hideDRO();
+  fabmo.hideDRO();
 });
 $("#dash-info").click(function(evt) {
-  fabmoDashboard.notify('info', 'Heads Up!');
+  fabmo.notify('info', 'Heads Up!');
 });
 $("#dash-success").click(function(evt) {
-  fabmoDashboard.notify('success', 'Great Job!');
+  fabmo.notify('success', 'Great Job!');
 });
 $("#dash-warning").click(function(evt) {
-  fabmoDashboard.notify('warning', 'Uh Oh!');
+  fabmo.notify('warning', 'Uh Oh!');
 });
 $("#dash-error").click(function(evt) {
-  fabmoDashboard.notify('error', 'Epic Fail!');
+  fabmo.notify('error', 'Epic Fail!');
 });
-
 $("#dash-launch-job-manager").click(function(evt) {
-  fabmoDashboard.launchApp('job-manager');
+  fabmo.launchApp('job-manager');
+});
+$("#dash-showinfo-same").click(function(evt) {
+  fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_top'});
+});
+$("#dash-showinfo-new").click(function(evt) {
+  fabmo.navigate('http://www.shopbottools.com/ShopBotDocs/files/SBG00253140912CommandRefV3.pdf', {target : '_blank'});
 });

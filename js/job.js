@@ -56,11 +56,12 @@ $("#job-go").click(function(evt) {
     var feedrate = validateInput($("#job-input-feedrate"));
     var passdepth = validateInput($("#job-input-passdepth"));
 
-    code = makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate, passdepth);
-    fabmoDashboard.submitJob(code, {filename : 'example-circle.nc',
-                                    name : d + '" Diameter Circle',
-                                    description : d + '" diameter circle centered at ' + cx + ',' + cy + ' at a depth of ' + depth + '"' 
-    })
+    fabmo.submitJob({
+      file : makeCircle(cx,cy,d,zpullup,depth,seg_size,feedrate, passdepth),
+      filename : 'example-circle.nc',
+      name : d + '" Diameter Circle',
+      description : d + '" diameter circle centered at ' + cx + ',' + cy + ' at a depth of ' + depth + '"' 
+    });
     evt.preventDefault();
 });
 
