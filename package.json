@@ -1,7 +1,7 @@
 {
 	"name":"Example-App",
     "repository" : "https://github.com/FabMo/fabmo-example-app.git",
-    "license" : "MIT",
+    "license" : "Apache-2.0",
 	"main":"./index.html",
 	"icon":"icon.png",
 	"icon_color":"#313366",
