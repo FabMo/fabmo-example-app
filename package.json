@@ -5,7 +5,7 @@
 	"main":"./index.html",
 	"icon":"icon.png",
 	"icon_color":"#313366",
-	"version":"1.0.0",
+	"version":"1.0.1",
 	"author":"Ryan Sturmer",
 	"website":"http://www.shopbottools.com",
 	"description":"Demo app for the Fabmo Developer Kit",
