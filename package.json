@@ -1,14 +1,15 @@
 {
-	"name":"Example-App",
+	"name":"FabMo-App Example",
     "repository" : "https://github.com/FabMo/fabmo-example-app.git",
     "license" : "Apache-2.0",
 	"main":"./index.html",
 	"icon":"icon.png",
 	"icon_color":"#313366",
-	"version":"1.0.2",
-	"author":"Ryan Sturmer",
+	"version":"1.0.3",
+	"author":"Ryan Sturmer, et al",
 	"website":"http://www.shopbottools.com",
-	"description":"Demo app for the Fabmo Developer Kit",
+	"description":"Demo app for the Fabmo App Developers",
+	"id": "fabmo-app-example",
 	"devDependencies": {
     	"grunt": "^0.4.5",
     	"grunt-zip": "^0.17.1"
